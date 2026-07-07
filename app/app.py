@@ -2,52 +2,78 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 import cv2
+
 from PIL import Image
-from tensorflow.keras.preprocessing.image import img_to_array
 from pathlib import Path
+from tensorflow.keras.preprocessing.image import img_to_array
 
 
-# ===============================
+# =====================================
 # Page Configuration
-# ===============================
+# =====================================
 
 st.set_page_config(
-    page_title="Chest X-Ray AI",
+    page_title="Chest X-Ray Pneumonia AI",
     page_icon="🫁",
     layout="wide"
 )
 
 
-# ===============================
-# Load Model
-# ===============================
+# =====================================
+# Model Path
+# =====================================
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MODEL_PATH = BASE_DIR / "models" / "best_densenet121_pneumonia_final.keras"
 
+MODEL_PATH = (
+    BASE_DIR
+    / "Models"
+    / "best_densenet121_pneumonia_final.keras"
+)
+
+
+
+# Debug (temporary)
+# st.write(MODEL_PATH)
+# st.write(MODEL_PATH.exists())
+
+
+
+# =====================================
+# Load Model
+# =====================================
 
 @st.cache_resource
 def load_model():
 
+    if not MODEL_PATH.exists():
+        st.error(
+            f"Model not found:\n{MODEL_PATH}"
+        )
+        st.stop()
+
+
     model = tf.keras.models.load_model(
-        MODEL_PATH
+        MODEL_PATH,
+        compile=False
     )
+
 
     return model
 
 
-# IMPORTANT
-# Load model before Grad-CAM
+
 model = load_model()
 
 
 
-# ===============================
+# =====================================
 # Grad-CAM Model
-# ===============================
+# =====================================
 
 last_conv_layer_name = "conv5_block16_concat"
+
 
 
 grad_model = tf.keras.models.Model(
@@ -66,19 +92,22 @@ grad_model = tf.keras.models.Model(
 
 
 
-# ===============================
-# Grad-CAM Function
-# ===============================
+# =====================================
+# Grad-CAM
+# =====================================
 
 def generate_gradcam(img_array):
 
+
     with tf.GradientTape() as tape:
+
 
         conv_outputs, predictions = grad_model(
             img_array
         )
 
-        loss = predictions[:, 0]
+
+        loss = predictions[:,0]
 
 
     grads = tape.gradient(
@@ -96,7 +125,7 @@ def generate_gradcam(img_array):
     conv_outputs = conv_outputs[0]
 
 
-    heatmap = conv_outputs @ pooled_grads[..., None]
+    heatmap = conv_outputs @ pooled_grads[...,None]
 
 
     heatmap = tf.squeeze(
@@ -110,7 +139,7 @@ def generate_gradcam(img_array):
     )
 
 
-    heatmap /= (
+    heatmap = heatmap / (
         tf.reduce_max(heatmap)
         + 1e-10
     )
@@ -120,9 +149,9 @@ def generate_gradcam(img_array):
 
 
 
-# ===============================
-# Prediction Function
-# ===============================
+# =====================================
+# Prediction
+# =====================================
 
 def predict_xray(image):
 
@@ -151,9 +180,11 @@ def predict_xray(image):
     )
 
 
+
     prediction = model.predict(
         input_image
     )[0][0]
+
 
 
     if prediction >= 0.5:
@@ -174,10 +205,12 @@ def predict_xray(image):
     )
 
 
+
     heatmap = cv2.resize(
         heatmap,
         (224,224)
     )
+
 
 
     original = np.array(
@@ -191,35 +224,47 @@ def predict_xray(image):
     )
 
 
+
     heatmap_color = cv2.applyColorMap(
-        np.uint8(255 * heatmap),
+
+        np.uint8(
+            255 * heatmap
+        ),
+
         cv2.COLORMAP_JET
     )
 
 
+
     overlay = cv2.addWeighted(
+
         original,
         0.6,
+
         heatmap_color,
         0.4,
+
         0
     )
 
 
+
     overlay = cv2.cvtColor(
+
         overlay,
+
         cv2.COLOR_BGR2RGB
     )
+
 
 
     return label, confidence, overlay
 
 
 
-# ===============================
+# =====================================
 # UI
-# ===============================
-
+# =====================================
 
 st.title(
     "Chest X-Ray Pneumonia AI"
@@ -228,22 +273,25 @@ st.title(
 
 st.write(
 """
-This application uses a DenseNet121
-Deep Learning model to classify
-Chest X-Ray images and provide
-Grad-CAM explainability.
+Deep Learning application using DenseNet121
+for pneumonia detection from chest X-Ray images.
+
+Includes Grad-CAM explainability.
 """
 )
 
 
 
 uploaded_file = st.file_uploader(
+
     "Upload Chest X-Ray Image",
+
     type=[
         "jpg",
         "jpeg",
         "png"
     ]
+
 )
 
 
@@ -254,6 +302,7 @@ if uploaded_file:
     image = Image.open(
         uploaded_file
     )
+
 
 
     st.subheader(
@@ -283,6 +332,7 @@ if uploaded_file:
             )
 
 
+
         st.success(
             "Analysis Complete"
         )
@@ -293,6 +343,7 @@ if uploaded_file:
 
 
         with col1:
+
 
             st.subheader(
                 "Diagnosis"
@@ -313,13 +364,17 @@ if uploaded_file:
 
 
             st.metric(
+
                 "Confidence",
+
                 f"{confidence*100:.2f}%"
+
             )
 
 
 
         with col2:
+
 
             st.subheader(
                 "Grad-CAM Explanation"
@@ -334,8 +389,8 @@ if uploaded_file:
 
 
         st.info(
-        """
-        Grad-CAM highlights the regions
-        that influenced the model decision.
-        """
+"""
+Grad-CAM highlights the image regions
+that influenced the model prediction.
+"""
         )
