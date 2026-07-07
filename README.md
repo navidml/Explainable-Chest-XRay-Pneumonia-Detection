@@ -1,4 +1,4 @@
-# 🩺 Explainable Chest X-Ray Pneumonia Detection using Deep Learning
+#  Explainable Chest X-Ray Pneumonia Detection using Deep Learning
 
 <p align="center">
   <img src="https://img.shields.io/badge/Deep%20Learning-TensorFlow-orange?style=for-the-badge">
@@ -8,7 +8,7 @@
 </p>
 
 
-## 📌 Overview
+##  Overview
 
 This project presents an **Explainable Artificial Intelligence (XAI) system** for detecting pneumonia from chest X-ray images using advanced deep learning techniques.
 
@@ -19,21 +19,21 @@ The system uses **DenseNet121 Transfer Learning**, optimized training strategies
 
 ---
 
-# 🎯 Project Objectives
+#  Project Objectives
 
 The main objectives of this project are:
 
-✅ Develop a deep learning model for pneumonia detection from chest X-ray images
+ Develop a deep learning model for pneumonia detection from chest X-ray images
 
-✅ Apply transfer learning using DenseNet121 architecture
+ Apply transfer learning using DenseNet121 architecture
 
-✅ Handle medical image classification challenges
+ Handle medical image classification challenges
 
-✅ Improve model generalization through data augmentation
+ Improve model generalization through data augmentation
 
-✅ Evaluate performance using appropriate classification metrics
+ Evaluate performance using appropriate classification metrics
 
-✅ Visualize model attention using Grad-CAM explanations
+ Visualize model attention using Grad-CAM explanations
 
 
 ---
@@ -86,7 +86,7 @@ Normal / Pneumonia Prediction
 
 ---
 
-# 🔬 Explainable AI with Grad-CAM
+#  Explainable AI with Grad-CAM
 
 Deep learning models are often considered black boxes.
 
@@ -124,7 +124,7 @@ This allows better understanding of model behavior and increases trust in AI-ass
 
 ---
 
-# 📂 Dataset
+#  Dataset
 
 The project uses a chest X-ray pneumonia dataset containing two classes:
 
@@ -166,7 +166,7 @@ chest_xray/
 
 ---
 
-# ⚙️ Technologies Used
+#  Technologies Used
 
 
 ## Deep Learning
@@ -204,7 +204,7 @@ chest_xray/
 
 ---
 
-# 🚀 Training Pipeline
+#  Training Pipeline
 
 
 The complete pipeline includes:
@@ -264,7 +264,7 @@ Final model performance:
 
 ---
 
-# 🖼️ Example Predictions
+#  Example Predictions
 
 
 ## Model Prediction
@@ -290,7 +290,7 @@ The model highlights important lung regions contributing to the prediction.
 
 ---
 
-# 🛠️ Installation
+#  Installation
 
 
 Clone repository:
@@ -319,7 +319,7 @@ pip install -r requirements.txt
 
 ---
 
-# ▶️ Usage
+#  Usage
 
 
 ## Training
@@ -349,7 +349,7 @@ streamlit run app/app.py
 
 ---
 
-# 🌟 Future Improvements
+#  Future Improvements
 
 
 Possible improvements:
@@ -363,7 +363,7 @@ Possible improvements:
 
 ---
 
-# 👨‍💻 Author
+#  Author
 
 
 **Navid Bordbar**
@@ -373,7 +373,7 @@ Medical AI | Deep Learning | Data Science
 
 ---
 
-# ⭐ Acknowledgements
+#  Acknowledgements
 
 
 This project demonstrates the potential of Artificial Intelligence in medical imaging and aims to improve transparency and reliability of deep learning-based diagnostic systems.
@@ -381,6 +381,6 @@ This project demonstrates the potential of Artificial Intelligence in medical im
 
 ---
 
-# 📜 License
+#  License
 
 This project is licensed under the MIT License.
