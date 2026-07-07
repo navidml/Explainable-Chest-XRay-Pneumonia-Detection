@@ -1,175 +1,167 @@
-# 🩺 Explainable Chest X-Ray Pneumonia Detection using Deep Learning
+<div align="center">
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Deep%20Learning-TensorFlow-orange?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Model-DenseNet121-blue?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Explainability-Grad--CAM-green?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Domain-Medical%20AI-red?style=for-the-badge">
+<h1>
+Explainable Chest X-Ray Pneumonia Detection using Deep Learning
+</h1>
+
+<p>
+An Explainable Artificial Intelligence framework for pneumonia detection from chest X-Ray images using DenseNet121 and Grad-CAM.
 </p>
 
 
-## 📌 Overview
+<p>
+<img src="https://img.shields.io/badge/Deep%20Learning-TensorFlow-orange">
+<img src="https://img.shields.io/badge/Architecture-DenseNet121-blue">
+<img src="https://img.shields.io/badge/Explainability-Grad--CAM-green">
+<img src="https://img.shields.io/badge/Domain-Medical%20AI-red">
+</p>
 
-This project presents an **Explainable Artificial Intelligence (XAI) system** for detecting pneumonia from chest X-ray images using advanced deep learning techniques.
-
-The goal is not only to classify X-ray images as **Normal** or **Pneumonia**, but also to provide visual explanations of model decisions using **Grad-CAM**, improving transparency and interpretability for medical applications.
-
-The system uses **DenseNet121 Transfer Learning**, optimized training strategies, and explainable AI methods to create a reliable medical imaging pipeline.
-
-
----
-
-# 🎯 Project Objectives
-
-The main objectives of this project are:
-
-✅ Develop a deep learning model for pneumonia detection from chest X-ray images
-
-✅ Apply transfer learning using DenseNet121 architecture
-
-✅ Handle medical image classification challenges
-
-✅ Improve model generalization through data augmentation
-
-✅ Evaluate performance using appropriate classification metrics
-
-✅ Visualize model attention using Grad-CAM explanations
+</div>
 
 
 ---
 
-# 🧠 Model Architecture
+## Overview
+
+This project develops an **Explainable Deep Learning system** for automated pneumonia detection from chest X-ray images.
+
+The objective is not only to classify medical images into **Normal** and **Pneumonia** categories, but also to provide visual explanations of model decisions using **Gradient-weighted Class Activation Mapping (Grad-CAM)**.
+
+By combining transfer learning with explainable AI techniques, this system aims to improve transparency, interpretability, and reliability of deep learning models in medical imaging.
+
+
+---
+
+## Key Objectives
+
+The main goals of this project are:
+
+- Develop a deep learning model for pneumonia classification from chest X-ray images
+- Utilize DenseNet121 transfer learning for feature extraction
+- Apply medical image preprocessing and augmentation techniques
+- Improve model robustness and generalization
+- Evaluate performance using clinical classification metrics
+- Generate visual explanations using Grad-CAM
+
+
+---
+
+## Deep Learning Approach
+
+
+The model architecture follows a transfer learning strategy:
 
 
 ```
 Chest X-Ray Image
 
-        │
-
-        ▼
+        |
+        v
 
 Image Preprocessing
 
-        │
-
-        ▼
+        |
+        v
 
 DenseNet121
-(Transfer Learning Backbone)
+(Pre-trained CNN Backbone)
 
-        │
-
-        ▼
+        |
+        v
 
 Global Average Pooling
 
-        │
+        |
+        v
 
-        ▼
+Fully Connected Classification Layers
 
-Fully Connected Layers
+        |
+        v
 
-        │
+Sigmoid Output Layer
 
-        ▼
-
-Sigmoid Classifier
-
-        │
-
-        ▼
+        |
+        v
 
 Normal / Pneumonia Prediction
 
 ```
 
 
+DenseNet121 was selected because of its powerful feature extraction capability and proven performance in medical image analysis.
+
+
 ---
 
-# 🔬 Explainable AI with Grad-CAM
-
-Deep learning models are often considered black boxes.
-
-To overcome this limitation, this project integrates **Gradient-weighted Class Activation Mapping (Grad-CAM)**.
-
-Grad-CAM highlights the regions of the X-ray image that influenced the model prediction.
+## Explainable AI (Grad-CAM)
 
 
-Example workflow:
+Deep learning models often behave as black-box systems, making their decisions difficult to interpret.
+
+To address this challenge, this project integrates **Grad-CAM**, an explainability method that highlights important regions in the X-ray image that contributed to the prediction.
+
+
+The explainability pipeline:
+
 
 ```
-X-Ray Image
+Input X-Ray Image
 
-      ↓
+        |
+        v
 
 Deep Learning Model
 
-      ↓
+        |
+        v
 
-Prediction
+Prediction Probability
 
-      ↓
+        |
+        v
 
 Grad-CAM Heatmap
 
-      ↓
+        |
+        v
 
-Visual Explanation
+Visual Model Explanation
 
 ```
 
 
-This allows better understanding of model behavior and increases trust in AI-assisted medical diagnosis.
+Grad-CAM provides insight into whether the model focuses on clinically meaningful lung regions during prediction.
 
 
 ---
 
-# 📂 Dataset
+## Dataset
 
-The project uses a chest X-ray pneumonia dataset containing two classes:
+
+The model is trained on a chest X-ray dataset containing two categories:
+
 
 | Class | Description |
-|---|---|
-| Normal | Healthy chest X-ray images |
-| Pneumonia | X-ray images showing pneumonia patterns |
+|------|-------------|
+| Normal | Chest X-ray images without pneumonia |
+| Pneumonia | Chest X-ray images showing pneumonia patterns |
 
 
-Dataset structure:
+The dataset is processed through:
 
-```
-chest_xray/
-
-│
-
-├── train/
-
-│   ├── NORMAL/
-
-│   └── PNEUMONIA/
-
-
-├── validation/
-
-│   ├── NORMAL/
-
-│   └── PNEUMONIA/
-
-
-└── test/
-
-    ├── NORMAL/
-
-    └── PNEUMONIA/
-
-```
+- Image resizing
+- Pixel normalization
+- Data augmentation
+- Class distribution analysis
 
 
 ---
 
-# ⚙️ Technologies Used
+## Technologies
 
 
-## Deep Learning
+### Deep Learning
 
 - TensorFlow
 - Keras
@@ -178,56 +170,61 @@ chest_xray/
 - Fine Tuning
 
 
-## Data Processing
+### Data Processing
 
+- Python
 - NumPy
 - Pandas
 - OpenCV
 - Pillow
 
 
-## Visualization
+### Visualization
 
 - Matplotlib
 - Seaborn
 
 
-## Explainable AI
+### Explainable AI
 
 - Grad-CAM
 
 
-## Deployment
+### Deployment
 
 - Streamlit
 
 
 ---
 
-# 🚀 Training Pipeline
+## Training Pipeline
 
 
-The complete pipeline includes:
+### Data Preparation
 
+The preprocessing pipeline includes:
 
-### 1. Data Preparation
-
-- Image resizing
+- Image loading
+- Resizing images to model input size
 - Normalization
 - Data augmentation
-- Class distribution analysis
+- Dataset preparation
 
 
-### 2. Model Development
+### Model Training
 
-- Loading DenseNet121 pretrained weights
-- Adding custom classification layers
-- Training with optimized callbacks
+The training process includes:
+
+- DenseNet121 initialization
+- Custom classification head
+- Optimized training callbacks
+- Model checkpointing
+- Performance monitoring
 
 
-### 3. Model Evaluation
+### Model Evaluation
 
-Evaluation includes:
+The system is evaluated using:
 
 - Accuracy
 - Precision
@@ -237,21 +234,16 @@ Evaluation includes:
 - Confusion Matrix
 
 
-### 4. Explainability
-
-Generation of Grad-CAM heatmaps for model interpretation.
-
-
 ---
 
-# 📊 Results
+## Model Performance
 
 
-Final model performance:
+Final evaluation results:
 
 
 | Metric | Score |
-|---|---|
+|--------|-------|
 | Accuracy | TBD |
 | Precision | TBD |
 | Recall | TBD |
@@ -259,53 +251,48 @@ Final model performance:
 | ROC-AUC | TBD |
 
 
-*(Results will be updated after final training)*
+Performance metrics will be updated after final model validation.
 
 
 ---
 
-# 🖼️ Example Predictions
+## Example Prediction
 
 
-## Model Prediction
+Example workflow:
+
 
 ```
 Input:
+
 Chest X-Ray Image
 
 
-Output:
+Model Output:
 
-Prediction: Pneumonia
+Class:
+Pneumonia
 
-Confidence: XX%
+
+Confidence:
+XX %
 
 ```
 
 
-## Grad-CAM Explanation
-
-The model highlights important lung regions contributing to the prediction.
+The system provides both prediction results and Grad-CAM visualization for interpretation.
 
 
 ---
 
-# 🛠️ Installation
+## Installation
 
 
-Clone repository:
+Clone the repository:
 
 
 ```bash
 git clone https://github.com/yourusername/Explainable-Chest-XRay-Pneumonia-Detection.git
-```
-
-
-Navigate into project:
-
-
-```bash
-cd Explainable-Chest-XRay-Pneumonia-Detection
 ```
 
 
@@ -319,10 +306,10 @@ pip install -r requirements.txt
 
 ---
 
-# ▶️ Usage
+## Usage
 
 
-## Training
+Train the model:
 
 
 ```bash
@@ -330,7 +317,7 @@ python src/train.py
 ```
 
 
-## Prediction
+Run inference:
 
 
 ```bash
@@ -338,7 +325,7 @@ python src/inference.py
 ```
 
 
-## Streamlit Application
+Launch the Streamlit application:
 
 
 ```bash
@@ -346,24 +333,23 @@ streamlit run app/app.py
 ```
 
 
-
 ---
 
-# 🌟 Future Improvements
+## Future Improvements
 
 
-Possible improvements:
+Future development directions include:
 
-- Vision Transformer (ViT) implementation
+- Vision Transformer (ViT) based architectures
 - Ensemble deep learning models
-- Self-supervised pretraining
-- Deployment as medical decision support system
-- External clinical validation
+- Self-supervised medical image learning
+- Large-scale clinical validation
+- Deployment as an AI-assisted diagnostic support system
 
 
 ---
 
-# 👨‍💻 Author
+## Author
 
 
 **Navid Bordbar**
@@ -373,14 +359,7 @@ Medical AI | Deep Learning | Data Science
 
 ---
 
-# ⭐ Acknowledgements
+## License
 
 
-This project demonstrates the potential of Artificial Intelligence in medical imaging and aims to improve transparency and reliability of deep learning-based diagnostic systems.
-
-
----
-
-# 📜 License
-
-This project is licensed under the MIT License.
+This project is released under the MIT License.
