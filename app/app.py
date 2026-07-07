@@ -35,20 +35,24 @@ st.set_page_config(
 # ===============================
 
 
-@st.cache_resource
+from pathlib import Path
 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+MODEL_PATH = BASE_DIR / "Models" / "best_densenet121_pneumonia_final.keras"
+
+
+
+@st.cache_resource
 def load_model():
 
     model = tf.keras.models.load_model(
-        "best_densenet121_pneumonia_final.keras"
+        MODEL_PATH
     )
 
     return model
-
-
-
-model = load_model()
-
 
 
 # ===============================
