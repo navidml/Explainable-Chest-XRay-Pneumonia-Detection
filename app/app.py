@@ -34,12 +34,6 @@ MODEL_PATH = (
 
 
 
-# Debug (temporary)
-# st.write(MODEL_PATH)
-# st.write(MODEL_PATH.exists())
-
-
-
 # =====================================
 # Load Model
 # =====================================
@@ -48,20 +42,33 @@ MODEL_PATH = (
 def load_model():
 
     if not MODEL_PATH.exists():
+
         st.error(
             f"Model not found:\n{MODEL_PATH}"
         )
+
         st.stop()
 
 
-    model = tf.keras.models.load_model(
-        MODEL_PATH,
-        compile=False,
-        safe_mode=False
-    )
+    try:
+
+        model = tf.keras.models.load_model(
+            MODEL_PATH,
+            compile=False
+        )
+
+        return model
 
 
-    return model
+    except Exception as e:
+
+        st.error(
+            "Model loading failed"
+        )
+
+        st.exception(e)
+
+        st.stop()
 
 
 
@@ -70,11 +77,43 @@ model = load_model()
 
 
 # =====================================
-# Grad-CAM Model
+# Check Model Layers
 # =====================================
 
-last_conv_layer_name = "conv5_block16_concat"
+# برای پیدا کردن آخرین Conv Layer در DenseNet121
 
+possible_layers = [
+    layer.name 
+    for layer in model.layers
+]
+
+
+last_conv_layer_name = None
+
+
+for name in reversed(possible_layers):
+
+    if "concat" in name or "conv" in name:
+
+        last_conv_layer_name = name
+
+        break
+
+
+
+if last_conv_layer_name is None:
+
+    st.error(
+        "No convolution layer found for Grad-CAM"
+    )
+
+    st.stop()
+
+
+
+# =====================================
+# Grad-CAM Model
+# =====================================
 
 
 grad_model = tf.keras.models.Model(
@@ -88,14 +127,14 @@ grad_model = tf.keras.models.Model(
 
         model.output
     ]
-
 )
 
 
 
 # =====================================
-# Grad-CAM
+# Grad-CAM Function
 # =====================================
+
 
 def generate_gradcam(img_array):
 
@@ -111,10 +150,12 @@ def generate_gradcam(img_array):
         loss = predictions[:,0]
 
 
+
     grads = tape.gradient(
         loss,
         conv_outputs
     )
+
 
 
     pooled_grads = tf.reduce_mean(
@@ -123,7 +164,9 @@ def generate_gradcam(img_array):
     )
 
 
+
     conv_outputs = conv_outputs[0]
+
 
 
     heatmap = conv_outputs @ pooled_grads[...,None]
@@ -134,16 +177,23 @@ def generate_gradcam(img_array):
     )
 
 
+
     heatmap = tf.maximum(
         heatmap,
         0
     )
 
 
-    heatmap = heatmap / (
-        tf.reduce_max(heatmap)
-        + 1e-10
+
+    max_value = tf.reduce_max(
+        heatmap
     )
+
+
+    if max_value != 0:
+
+        heatmap /= max_value
+
 
 
     return heatmap.numpy()
@@ -153,6 +203,7 @@ def generate_gradcam(img_array):
 # =====================================
 # Prediction
 # =====================================
+
 
 def predict_xray(image):
 
@@ -167,12 +218,15 @@ def predict_xray(image):
     )
 
 
+
     img_array = img_to_array(
         img
     )
 
 
+
     img_array = img_array / 255.0
+
 
 
     input_image = np.expand_dims(
@@ -191,12 +245,14 @@ def predict_xray(image):
     if prediction >= 0.5:
 
         label = "PNEUMONIA"
+
         confidence = prediction
 
 
     else:
 
         label = "NORMAL"
+
         confidence = 1 - prediction
 
 
@@ -219,12 +275,6 @@ def predict_xray(image):
     )
 
 
-    original = cv2.cvtColor(
-        original,
-        cv2.COLOR_RGB2BGR
-    )
-
-
 
     heatmap_color = cv2.applyColorMap(
 
@@ -233,6 +283,7 @@ def predict_xray(image):
         ),
 
         cv2.COLORMAP_JET
+
     )
 
 
@@ -240,26 +291,24 @@ def predict_xray(image):
     overlay = cv2.addWeighted(
 
         original,
+
         0.6,
 
         heatmap_color,
+
         0.4,
 
         0
+
     )
 
 
 
-    overlay = cv2.cvtColor(
-
-        overlay,
-
-        cv2.COLOR_BGR2RGB
+    return (
+        label,
+        confidence,
+        overlay
     )
-
-
-
-    return label, confidence, overlay
 
 
 
@@ -267,8 +316,9 @@ def predict_xray(image):
 # UI
 # =====================================
 
+
 st.title(
-    "Chest X-Ray Pneumonia AI"
+    "🫁 Chest X-Ray Pneumonia AI"
 )
 
 
@@ -311,6 +361,7 @@ if uploaded_file:
     )
 
 
+
     st.image(
         image,
         width=400
@@ -339,6 +390,7 @@ if uploaded_file:
         )
 
 
+
         col1, col2 = st.columns(2)
 
 
@@ -362,6 +414,7 @@ if uploaded_file:
                 st.success(
                     label
                 )
+
 
 
             st.metric(
@@ -391,7 +444,7 @@ if uploaded_file:
 
         st.info(
 """
-Grad-CAM highlights the image regions
-that influenced the model prediction.
+Grad-CAM highlights regions
+that influenced the AI prediction.
 """
         )
